@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valida NIF</title>
+</head>
+
+<body>
+  <h1>Validación de DNI desde Cliente</h1>
+
+  <input type="text" placeholder="Introduzca el DNI" name="nif" id="nif" pattern="[0-9]{8}-[A-Z]{1}"
+    title="El NIF debe tener 8 números, un guión, y una letra mayúscula" />
+  <br /><br />
+  <button id="btnValidaCliente">Validar</button>
+
+  <br />
+  <br>
+  <div>
+    <h3 id="mensajes1"></h3>
+  </div>
+
+  <h1>Validación de DNI desde Servidor</h1>
+
+  <input type="text" placeholder="Número NIF..." name="numero" id="numero" />
+  <input type="text" name="letra" id="letra" placeholder="Letra" />
+  <br /><br />
+  <button id="btnValidaServer">Validar</button>
+  <br>
+  <br>
+  <div>
+    <h3 id="mensajes2"></h3>
+  </div>
+
+
+  <script>
+
+    document.getElementById("btnValidaCliente").addEventListener("click", enviarDatosCliente);
+
+    document.getElementById("btnValidaServer").addEventListener("click", enviarDatosServer);
+
+    let mensajes1 = document.getElementById('mensajes1');
+    let mensajes2 = document.getElementById('mensajes2');
+
+    function enviarDatosCliente() {
+
+      let nifForm = document.getElementById("nif").value;
+
+      console.log(nifForm);
+
+      var init = {
+        method: 'POST',
+        body: JSON.stringify({ "nif": nifForm }),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      };
+
+      fetch('/dniCliente', init)
+        .then(response => response.json())
+        .then(function (data) {
+          let mensajeServer = data.msg;
+
+          mensajes1.innerHTML = mensajeServer;
+
+        });
+
+    }
+
+    function enviarDatosServer() {
+
+      let numero = document.getElementById("numero").value;
+      let letra = document.getElementById("letra").value;
+
+      var init = {
+        method: 'POST',
+        body: JSON.stringify({ 
+          "numero": numero ,
+          "letra": letra
+    }),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      };
+
+      fetch('/dniServer', init)
+        .then(response => response.json())
+        .then(function (data) {
+          let mensajeServer = data.msg;
+
+          mensajes2.innerHTML = mensajeServer;
+
+        });
+
+    }
+
+
+
+  </script>
+</body>
+
+</html>
